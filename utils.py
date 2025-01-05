@@ -92,6 +92,35 @@ def non_max_suppression(bboxes, iou_threshold, threshold):
         
     return best_bboxes
 
+def save_checkpoint(model, optimizer, filename="my_checkpoint.pth.tar"):
+    """
+    Save model checkpoint.
+    Args:
+        model: Model to save.
+        optimizer: Optimizer of the model.
+        filename (str): Name of the file.
+    """
+    checkpoint = {
+        "state_dict": model.state_dict(),
+        "optimizer": optimizer.state_dict(),
+    }
+    torch.save(checkpoint, filename)
+    print(f"Checkpoint saved to {filename}")
+
+
+def load_checkpoint(model, optimizer, filename="my_checkpoint.pth.tar"):
+    """
+    Load model checkpoint.
+    Args:
+        model: Model to load the checkpoint to.
+        optimizer: Optimizer of the model.
+        filename (str): Name of the file.
+    """
+    checkpoint = torch.load(filename)
+    model.load_state_dict(checkpoint["state_dict"])
+    optimizer.load_state_dict(checkpoint["optimizer"])
+    print(f"Checkpoint loaded from {filename}")
+
 
 def show_image(image, boxes, predict=False):
     """
