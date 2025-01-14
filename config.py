@@ -1,4 +1,24 @@
+import torch
+
 CLASSES = ['bus', 'car', 'microbus', 'motorbike', 'pickup-van', 'tricycle', 'truck']
+
+NUM_CLASSES = len(CLASSES)
+
+DATA_DIR = "Dataset"
+
+TRAIN_DIR = "train"
+
+VALID_DIR = "valid"
+
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+LEARNING_RATE = 2e-5
+
+ANCHORS = [
+    [(0.66, 0.68), (0.40, 0.32), (0.20, 0.39)],
+    [(0.21, 0.19), (0.12, 0.20), (0.10, 0.12)],
+    [(0.06, 0.10), (0.04, 0.06), (0.02, 0.04)]
+]
 
 ARCHITECTURE = [
     #This is the architecture of the YOLOv3 model.
