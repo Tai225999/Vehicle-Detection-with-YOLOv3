@@ -17,7 +17,7 @@ class YoloLoss(nn.Module):
         self.lambda_obj = 1
         self.lambda_box = 10
 
-    def forward(self, predictions, target, anchors):
+    def forward(self, predictions, target, anchors, device="cuda"):
         """
         Computes the loss for a particular scale in the YOLOv3 model.
         Args:
@@ -27,9 +27,13 @@ class YoloLoss(nn.Module):
                 (batch size, anchors on scale, grid size, grid size, 6).
             anchors (torch.Tensor): Anchor boxes on the particular scale of shape 
                 (anchors on scale, 2).
+            device (str): Device to run the computation on.
         Returns:
             torch.Tensor: The computed loss for the particular scale.
         """
+        predictions = predictions.to(device)
+        target = target.to(device)
+        anchors = anchors.to(device)
 
         # Check where obj and noobj (we ignore if target == -1)
         obj = target[..., 0] == 1  # in paper this is Iobj_i
@@ -38,9 +42,12 @@ class YoloLoss(nn.Module):
         # ======================= #
         #   FOR NO OBJECT LOSS    #
         # ======================= #
+        
         no_object_loss = self.bce(
             (predictions[..., 0:1][noobj]), (target[..., 0:1][noobj]),
         )
+
+        assert not torch.isnan(no_object_loss).any(), "No object loss is nan"
 
         # ==================== #
         #   FOR OBJECT LOSS    #
@@ -53,6 +60,8 @@ class YoloLoss(nn.Module):
         # Object loss
         object_loss = self.bce((predictions[..., 0:1][obj]), ious)
 
+        assert not torch.isnan(object_loss).any(), "Object loss is nan"
+
         # ======================== #
         #   FOR BOX COORDINATES    #
         # ======================== #
@@ -63,12 +72,16 @@ class YoloLoss(nn.Module):
         # Box loss
         box_loss = self.mse(predictions[..., 1:5][obj], target[..., 1:5][obj])
 
+        assert not torch.isnan(box_loss).any(), "Box loss is nan"
+
         # ================== #
         #   FOR CLASS LOSS   #
         # ================== #
         class_loss = self.entropy(
             (predictions[..., 5:][obj]), (target[..., 5][obj].long()),
         )
+
+        assert not torch.isnan(class_loss).any(), "Class loss is nan"
 
         # Total loss
         return (

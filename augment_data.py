@@ -46,7 +46,7 @@ def save_boxes_and_labels(label_path, boxes, class_labels):
     with open(label_path, "w") as f:
         for box, class_id in zip(boxes, class_labels):
             x_center, y_center, width, height = box
-            f.write(f"{int(class_id)} {x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}\n")
+            f.write(f"{int(class_id)} {x_center:.8f} {y_center:.8f} {width:.8f} {height:.8f}\n")
 
 
 # Load the training CSV file

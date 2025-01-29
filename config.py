@@ -1,24 +1,45 @@
 import torch
+import os
 
-CLASSES = ['bus', 'car', 'microbus', 'motorbike', 'pickup-van', 'tricycle', 'truck']
+SEED = 310704
+
+DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+ANCHORS = [
+    [(0.66, 0.69), (0.40, 0.32), (0.21, 0.35)],
+    [(0.19, 0.18), (0.11, 0.18), (0.09, 0.11)],
+    [(0.05, 0.09), (0.04, 0.05), (0.02, 0.04)]
+]
+
+CLASSES = ['bus', 'car', 'microbus', 'motorbike', 'pickup-van', 'truck']
 
 NUM_CLASSES = len(CLASSES)
 
-DATA_DIR = "Dataset"
+BATCH_SIZE = 16
 
-TRAIN_DIR = "train"
+ROOT_DIR = './'
 
-VALID_DIR = "valid"
+print(os.listdir(ROOT_DIR))
 
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+DATA_DIR = os.path.join(ROOT_DIR, 'Dataset')
 
-LEARNING_RATE = 2e-5
+TRAIN_DIR = os.path.join(DATA_DIR,'train')
 
-ANCHORS = [
-    [(0.66, 0.68), (0.40, 0.32), (0.20, 0.39)],
-    [(0.21, 0.19), (0.12, 0.20), (0.10, 0.12)],
-    [(0.06, 0.10), (0.04, 0.06), (0.02, 0.04)]
-]
+VALID_DIR = os.path.join(DATA_DIR,'valid')
+
+TEST_DIR = os.path.join(DATA_DIR,'test')
+
+TRAIN_CSV = os.path.join(DATA_DIR,'train.csv')
+
+VALID_CSV = os.path.join(DATA_DIR,'valid.csv')
+
+TEST_CSV = os.path.join(DATA_DIR,'test.csv')
+
+CHECKPOINT_DIR = os.path.join(ROOT_DIR, 'Checkpoints')
+
+IMAGE_SIZE = 416
+
+S = [IMAGE_SIZE // 32, IMAGE_SIZE // 16, IMAGE_SIZE // 8]
 
 ARCHITECTURE = [
     #This is the architecture of the YOLOv3 model.
@@ -54,3 +75,8 @@ ARCHITECTURE = [
     (256, 3, 1),
     "S",
 ]
+
+PRETRAIN_MODEL = os.path.join(DATA_DIR, 'Pretrained Weights/78.1map_0.2threshold_PASCAL.tar')
+
+LEARNING_RATE = 2e-5
+WEIGHT_DECAY = 1e-4

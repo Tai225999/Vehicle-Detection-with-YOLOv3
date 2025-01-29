@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 
 import config
-
+from utils import save_checkpoint, load_checkpoint
 
 class CNNBlock(nn.Module):
     """
@@ -176,5 +176,6 @@ def test():
     print(out[0].shape)
     print(out[1].shape)
     print(out[2].shape)
+    print("Success!")
 
-test()
+# test()
