@@ -19,8 +19,6 @@ BATCH_SIZE = 16
 
 ROOT_DIR = './'
 
-print(os.listdir(ROOT_DIR))
-
 DATA_DIR = os.path.join(ROOT_DIR, 'Dataset')
 
 TRAIN_DIR = os.path.join(DATA_DIR,'train')
